@@ -30,7 +30,7 @@ const PageLink: React.FC<PageLinkProps> = ({ url, children }) => (
       <Heading size="md">
         <LinkOverlay as={Link} to={url}>{children}</LinkOverlay>
       </Heading>
-      <ArrowForwardIcon boxSize={6}/>
+      <ArrowForwardIcon boxSize={6} data-testid="chakra-arrow-forward"/>
     </Flex>
   </LinkBox>
 );

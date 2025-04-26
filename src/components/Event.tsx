@@ -38,7 +38,7 @@ const Event: React.FC = () => {
   if (!event) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" />
+        <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
     )
   }
@@ -79,7 +79,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         <StatLabel display="flex">
           <Box as="span">Date</Box>
         </StatLabel>
-        <StatNumber fontSize="xl">
+        <StatNumber fontSize="xl" data-testid="date">
           <Tooltip hasArrow label={formatDateTime(event.datetime_utc)}>
             {formatDateTime(event.datetime_utc, event.venue.timezone)}
           </Tooltip>

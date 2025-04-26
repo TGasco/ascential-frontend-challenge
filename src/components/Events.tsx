@@ -54,7 +54,7 @@ const Events: React.FC = () => {
   if (!data) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" />
+        <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
     )
   }

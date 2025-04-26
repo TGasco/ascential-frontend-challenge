@@ -20,7 +20,7 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ items }) => (
   <Breadcrumb
     m="6"
     spacing="1"
-    separator={<ChevronRightIcon color="gray.500" />}
+    separator={<ChevronRightIcon color="gray.500" data-testid="chakra-breadcrumb-separator" />}
   >
     {items.map((item, index) => {
       const isCurrentPage = items.length === index + 1;
