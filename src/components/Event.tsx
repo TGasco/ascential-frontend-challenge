@@ -22,7 +22,7 @@ import { type Venue } from './Events';
 interface EventInfoProps {
   event: {
     short_title: string;
-    datetime_utc: Date;
+    datetime_local: Date;
     venue: Venue;
     url: string;
   }
@@ -78,7 +78,7 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         <StatLabel display="flex">
           <Box as="span">Date</Box>
         </StatLabel>
-        <StatNumber fontSize="xl">{formatDateTime(event.datetime_utc)}</StatNumber>
+        <StatNumber fontSize="xl">{formatDateTime(event.datetime_local, event.venue.timezone)}</StatNumber>
       </Stat>
     </SimpleGrid>
     <Flex>
