@@ -11,7 +11,8 @@ import {
   Stack,
   Image,
   LinkBox,
-  LinkOverlay 
+  LinkOverlay, 
+  Tooltip
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from './Breadcrumbs';
@@ -32,7 +33,7 @@ export interface Venue {
 export interface EventProps {
   id: string;
   short_title: string;
-  datetime_local: Date;
+  datetime_utc: Date;
   performers: Performers[];
   venue: Venue;
 }
@@ -93,9 +94,23 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => (
             {event.venue.display_location}
           </Text>
         </Box>
-        <Text fontSize="sm" fontWeight="bold" color="gray.600" justifySelf={'end'}>
-          {formatDateTime(event.datetime_local, event.venue.timezone)}
-        </Text>
+        <Tooltip
+          hasArrow
+          label={formatDateTime(event.datetime_utc)}
+        >
+          <Text 
+            fontSize="sm"
+            fontWeight="bold"
+            color="gray.600"
+            justifySelf="end"
+          >
+            <Link 
+              to={`/events/${event.id}`}
+            >
+              {formatDateTime(event.datetime_utc, event.venue.timezone)}
+            </Link>
+          </Text>
+        </Tooltip>
       </Stack>
     </CardBody>
   </LinkBox>

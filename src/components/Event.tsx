@@ -12,6 +12,7 @@ import {
   Spinner,
   Button,
   Stack,
+  Tooltip
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
@@ -22,7 +23,7 @@ import { type Venue } from './Events';
 interface EventInfoProps {
   event: {
     short_title: string;
-    datetime_local: Date;
+    datetime_utc: Date;
     venue: Venue;
     url: string;
   }
@@ -78,7 +79,11 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         <StatLabel display="flex">
           <Box as="span">Date</Box>
         </StatLabel>
-        <StatNumber fontSize="xl">{formatDateTime(event.datetime_local, event.venue.timezone)}</StatNumber>
+        <StatNumber fontSize="xl">
+          <Tooltip hasArrow label={formatDateTime(event.datetime_utc)}>
+            {formatDateTime(event.datetime_utc, event.venue.timezone)}
+          </Tooltip>
+        </StatNumber>
       </Stat>
     </SimpleGrid>
     <Flex>
