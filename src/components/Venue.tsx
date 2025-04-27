@@ -10,14 +10,17 @@ import {
   SimpleGrid,
   Box,
   Spinner,
-  AspectRatio,
+  AspectRatio
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
+import FavouriteButton from './FavouriteButton';
 
 interface StatsProps {
   venue: {
+    id: number;
+    name: string;
     city: string;
     country: string;
     capacity: number;
@@ -54,8 +57,13 @@ const Venue: React.FC = () => {
           { label: venue.name },
         ]} 
       />
-      <Flex bgColor="gray.200" p={[4, 6]}>
+      <Flex bgColor="gray.200" p={[4, 6]}
+        justify="space-between"
+      >
         <Heading>{venue.name}</Heading>
+        <FavouriteButton
+          id={venue.id}
+        />
       </Flex>
       <Stats venue={venue} />
       <Map location={venue.location} />

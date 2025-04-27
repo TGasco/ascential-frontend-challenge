@@ -85,4 +85,12 @@ describe('Venues component', () => {
         // Total links should match number of venues
         expect(screen.getAllByRole('link')).toHaveLength(2);
     });
+
+    it('renders the FavouriteButton component for each venue', async () => {
+        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { venues: mockVenues }, error: null });
+        render(<Venues />, { wrapper: MemoryRouter });
+
+        const favouriteButtons = await screen.findAllByRole('button', { name: /favourite/i });
+        expect(favouriteButtons).toHaveLength(mockVenues.length);
+    });
 });

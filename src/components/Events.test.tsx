@@ -124,4 +124,13 @@ describe('Events component', () => {
     expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
+
+  it('renders the FavouriteButton component for each event', async () => {
+    (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { events: mockEvents }, error: null });
+    render(<Events />, { wrapper: MemoryRouter });
+
+    // Check if the FavouriteButton component is rendered for each event
+    const favouriteButtons = await screen.findAllByRole('button', { name: /favourite/i });
+    expect(favouriteButtons).toHaveLength(mockEvents.length);
+  });
 });

@@ -4,6 +4,7 @@ import { Link as BrowserLink } from 'react-router-dom';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import Error from './Error';
 import Breadcrumbs from './Breadcrumbs';
+import FavouriteButton from './FavouriteButton';
 
 export interface VenueProps {
   id: number;
@@ -57,15 +58,28 @@ const VenueItem: React.FC<VenuItemProps> = ({ venue }) => (
       rounded="lg"
       _hover={{ bg: 'gray.100' }}
     >
-      <Badge colorScheme={venue.has_upcoming_events ? 'green' : 'red'} mb="2">
-        {`${venue.has_upcoming_events ? venue.num_upcoming_events : 'No'} Upcoming Events`}
-      </Badge>
-      <Heading size='sm' noOfLines={1}>
-        <LinkOverlay as={BrowserLink} to={`/venues/${venue.id}`}>
-          {venue.name_v2}
-        </LinkOverlay>
-      </Heading>
-      <Text fontSize="sm" color="gray.500">{venue.display_location}</Text>
+      <Flex 
+        direction={['column', 'row']} 
+        align="center" 
+        justify="space-between"
+      >
+        <Box flex="1">
+          <Badge colorScheme={venue.has_upcoming_events ? 'green' : 'red'} mb="2">
+            {`${venue.has_upcoming_events ? venue.num_upcoming_events : 'No'} Upcoming Events`}
+          </Badge>
+          <Heading size='sm' noOfLines={1}>
+            <LinkOverlay as={BrowserLink} to={`/venues/${venue.id}`}>
+              {venue.name_v2}
+            </LinkOverlay>
+          </Heading>
+          <Text fontSize="sm" color="gray.500">{venue.display_location}</Text>
+        </Box>
+        <Box as="span" mt={[2, 0]} ml={[0, 4]}>
+          <FavouriteButton
+            id={venue.id}
+          />
+        </Box>
+      </Flex>
     </Box>
   </LinkBox>
 );

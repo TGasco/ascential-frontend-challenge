@@ -101,4 +101,10 @@ describe('Event component', () => {
     const btn = await screen.findByRole('link', { name: /buy tickets/i });
     expect(btn).toHaveAttribute('href', mockEvent.url);
   });
+
+  it('renders the favourite button', async () => {
+      (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: mockEvent, error: null });
+      renderWithRouter();
+      expect(await screen.findByRole('button', { name: /add to favourites/i })).toBeInTheDocument();
+  });
 });
