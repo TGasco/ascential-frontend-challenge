@@ -103,6 +103,7 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => (
             fontWeight="bold"
             color="gray.600"
             justifySelf="end"
+            data-testid="date"
           >
             <Link 
               to={`/events/${event.id}`}

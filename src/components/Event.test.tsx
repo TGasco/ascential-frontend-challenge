@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Event from './Event';
 import * as useSeatGeekModule from '../utils/useSeatGeek';
 import { vi } from 'vitest';
+import { formatDateTime } from '../utils/formatDateTime';
 
 vi.mock('../utils/useSeatGeek');
 vi.mock('./Breadcrumbs', () => ({
@@ -12,10 +13,10 @@ vi.mock('./Breadcrumbs', () => ({
 vi.mock('./Error', () => ({
   default: () => <div data-testid="error">Error</div>
 }));
-vi.mock('../utils/formatDateTime', async () => ({
-  formatDateTime: (date: Date | string, tz?: string) =>
-    tz ? `formatted(${String(date)},${tz})` : `formatted(${String(date)})`
-}));
+// vi.mock('../utils/formatDateTime', async () => ({
+//   formatDateTime: (date: Date | string, tz?: string) =>
+//     tz ? `formatted(${String(date)},${tz})` : `formatted(${String(date)})`
+// }));
 
 const mockEvent = {
   short_title: 'Test Event',
@@ -65,7 +66,7 @@ describe('Event component', () => {
     expect(screen.getByText('Test Venue')).toBeInTheDocument();
     expect(screen.getByText('Test City, Country')).toBeInTheDocument();
     expect(screen.getByText('Date')).toBeInTheDocument();
-    expect(screen.getByTestId('date')).toHaveTextContent('formatted(Sat Jun 01 2024 19:00:00 GMT+0100 (British Summer Time),America/New_York)');
+    expect(screen.getByTestId('date')).toHaveTextContent('June 1, 2024 at 2:00:00 PM EDT');
     expect(screen.getByRole('link', { name: /buy tickets/i })).toHaveAttribute('href', 'https://tickets.com/test');
   });
 
@@ -75,9 +76,16 @@ describe('Event component', () => {
 
     const date = screen.getByTestId('date');
     expect(date).toBeInTheDocument();
+
+    // Compute expected UTC label
+    const expectedUtcLabel = formatDateTime(mockEvent.datetime_utc);
+
     userEvent.hover(date);
+
     await waitFor(() => {
-      expect(screen.getByText('formatted(Sat Jun 01 2024 19:00:00 GMT+0100 (British Summer Time),America/New_York)')).toBeInTheDocument();
+      const tooltip = screen.getByRole('tooltip');
+      expect(tooltip).toBeInTheDocument();
+      expect(tooltip).toHaveTextContent(expectedUtcLabel);
     });
   });
 

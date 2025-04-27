@@ -79,9 +79,11 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         <StatLabel display="flex">
           <Box as="span">Date</Box>
         </StatLabel>
-        <StatNumber fontSize="xl" data-testid="date">
+        <StatNumber fontSize="xl">
           <Tooltip hasArrow label={formatDateTime(event.datetime_utc)}>
-            {formatDateTime(event.datetime_utc, event.venue.timezone)}
+            <Box data-testid="date" sx={{ display: 'inline-block' }}>
+              {formatDateTime(event.datetime_utc, event.venue.timezone)}
+            </Box>
           </Tooltip>
         </StatNumber>
       </Stat>

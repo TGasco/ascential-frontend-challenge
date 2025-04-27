@@ -1,8 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 import Events from './Events';
 import * as useSeatGeekModule from '../utils/useSeatGeek';
 import { vi } from 'vitest';
+import { formatDateTime } from '../utils/formatDateTime';
 
 vi.mock('../utils/useSeatGeek');
 vi.mock('./Breadcrumbs', () => ({
@@ -11,16 +13,16 @@ vi.mock('./Breadcrumbs', () => ({
 vi.mock('./Error', () => ({
   default: () => <div data-testid="error">Error</div>
 }));
-vi.mock('../utils/formatDateTime', () => ({
-  formatDateTime: (date: Date | string, tz?: string) =>
-    tz ? `formatted(${date},${tz})` : `formatted(${date})`
-}));
+// vi.mock('../utils/formatDateTime', () => ({
+//   formatDateTime: (date: Date | string, tz?: string) =>
+//     tz ? `formatted(${date},${tz})` : `formatted(${date})`
+// }));
 
 const mockEvents = [
   {
     id: '1',
     short_title: 'Concert One',
-    datetime_utc: '2024-06-01T20:00:00Z',
+    datetime_utc: new Date('2024-06-01T18:00:00Z'),
     performers: [{ image: 'img1.jpg' }],
     venue: {
       name_v2: 'Venue One',
@@ -31,7 +33,7 @@ const mockEvents = [
   {
     id: '2',
     short_title: 'Concert Two',
-    datetime_utc: '2024-07-01T21:00:00Z',
+    datetime_utc: new Date('2021-04-07T23:00:00Z'),
     performers: [{ image: 'img2.jpg' }],
     venue: {
       name_v2: 'Venue Two',
@@ -83,8 +85,8 @@ describe('Events component', () => {
     expect(screen.getAllByRole('img')[1]).toHaveAttribute('src', 'img2.jpg');
 
     // Date/time (formatted)
-    expect(screen.getByText('formatted(2024-06-01T20:00:00Z,America/New_York)')).toBeInTheDocument();
-    expect(screen.getByText('formatted(2024-07-01T21:00:00Z,Europe/London)')).toBeInTheDocument();
+    expect(screen.getByText('June 1, 2024 at 2:00:00 PM EDT')).toBeInTheDocument();
+    expect(screen.getByText('April 8, 2021 at 12:00:00 AM GMT+1')).toBeInTheDocument();
   });
 
   it('renders links to event details', () => {
@@ -97,13 +99,23 @@ describe('Events component', () => {
     expect(links.some(link => link.getAttribute('href') === '/events/2')).toBe(true);
   });
 
-  it('renders Tooltip with correct label', async () => {
+  it('shows tooltip with UTC date on hover over date', async () => {
     (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { events: [mockEvents[0]] }, error: null });
     render(<Events />, { wrapper: MemoryRouter });
 
-    // Tooltip label is rendered in the DOM as an attribute
-    const tooltip = screen.getByText('formatted(2024-06-01T20:00:00Z,America/New_York)').closest('[role="tooltip"]');
-    expect(screen.getByText('formatted(2024-06-01T20:00:00Z,America/New_York)')).toBeInTheDocument();
+    const date = screen.getByTestId('date');
+    expect(date).toBeInTheDocument();
+
+    // Compute expected UTC label
+    const expectedUtcLabel = formatDateTime(mockEvents[0].datetime_utc);
+
+    userEvent.hover(date);
+
+    await waitFor(() => {
+      const tooltip = screen.getByRole('tooltip');
+      expect(tooltip).toBeInTheDocument();
+      expect(tooltip).toHaveTextContent(expectedUtcLabel);
+    });
   });
 
   it('renders nothing if events array is empty', () => {
