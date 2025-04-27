@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { fetcher } from './fetcher';
 
-function getSeatGeekUrl(path: string, options?: Record<string, string>) {
+export function getSeatGeekUrl(path: string, options?: Record<string, string>) {
   const searchParams = new URLSearchParams({
     ...options,
     client_id: import.meta.env.VITE_APP_SEAT_GEEK_API_CLIENT,

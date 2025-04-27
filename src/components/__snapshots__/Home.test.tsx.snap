@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Home component > matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1mhuh46"
+  >
+    <div
+      class="chakra-linkbox css-uhbnde"
+    >
+      <div
+        class="css-1eqzliz"
+      >
+        <h2
+          class="chakra-heading css-0"
+        >
+          <a
+            class="chakra-linkbox__overlay css-1hnz6hu"
+            href="/venues"
+          >
+            Browse Venues
+          </a>
+        </h2>
+        <svg
+          class="chakra-icon css-dvq678"
+          data-testid="chakra-arrow-forward"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      class="chakra-linkbox css-uhbnde"
+    >
+      <div
+        class="css-1eqzliz"
+      >
+        <h2
+          class="chakra-heading css-0"
+        >
+          <a
+            class="chakra-linkbox__overlay css-1hnz6hu"
+            href="/events"
+          >
+            Browse Events
+          </a>
+        </h2>
+        <svg
+          class="chakra-icon css-dvq678"
+          data-testid="chakra-arrow-forward"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

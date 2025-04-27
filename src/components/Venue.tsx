@@ -40,7 +40,7 @@ const Venue: React.FC = () => {
   if (!venue) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" />
+        <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
     )
   }

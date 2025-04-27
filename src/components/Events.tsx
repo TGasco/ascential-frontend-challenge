@@ -11,7 +11,8 @@ import {
   Stack,
   Image,
   LinkBox,
-  LinkOverlay 
+  LinkOverlay, 
+  Tooltip
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from './Breadcrumbs';
@@ -26,6 +27,7 @@ export interface Performers {
 export interface Venue {
   name_v2: string;
   display_location: string;
+  timezone: string;
 }
 
 export interface EventProps {
@@ -52,7 +54,7 @@ const Events: React.FC = () => {
   if (!data) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" />
+        <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
     )
   }
@@ -92,9 +94,24 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => (
             {event.venue.display_location}
           </Text>
         </Box>
-        <Text fontSize="sm" fontWeight="bold" color="gray.600" justifySelf={'end'}>
-          {formatDateTime(event.datetime_utc)}
-        </Text>
+        <Tooltip
+          hasArrow
+          label={formatDateTime(event.datetime_utc)}
+        >
+          <Text 
+            fontSize="sm"
+            fontWeight="bold"
+            color="gray.600"
+            justifySelf="end"
+            data-testid="date"
+          >
+            <Link 
+              to={`/events/${event.id}`}
+            >
+              {formatDateTime(event.datetime_utc, event.venue.timezone)}
+            </Link>
+          </Text>
+        </Tooltip>
       </Stack>
     </CardBody>
   </LinkBox>
