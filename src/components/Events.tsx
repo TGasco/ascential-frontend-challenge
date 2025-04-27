@@ -19,6 +19,7 @@ import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import { formatDateTime } from '../utils/formatDateTime';
+import FavouriteButton from './FavouriteButton';
 
 export interface Performers {
   image: string;
@@ -31,7 +32,7 @@ export interface Venue {
 }
 
 export interface EventProps {
-  id: string;
+  id: number;
   short_title: string;
   datetime_utc: Date;
   performers: Performers[];
@@ -82,37 +83,46 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => (
   >
     <Image src={event.performers[0].image} />
     <CardBody>
-      <Stack spacing="2">
-        <Heading size="md">
-          <LinkOverlay as={Link} to={`/events/${event.id}`}>{event.short_title}</LinkOverlay>
-        </Heading>
-        <Box>
-          <Text fontSize="sm" color="gray.600">
-            {event.venue.name_v2}
-          </Text>
-          <Text fontSize="sm" color="gray.600">
-            {event.venue.display_location}
-          </Text>
-        </Box>
-        <Tooltip
-          hasArrow
-          label={formatDateTime(event.datetime_utc)}
-        >
-          <Text 
-            fontSize="sm"
-            fontWeight="bold"
-            color="gray.600"
-            justifySelf="end"
-            data-testid="date"
+      <Flex direction={["column", "row"]}
+        align="center" 
+        justify="space-between">
+        <Stack spacing="2">
+          <Heading size="md">
+            <LinkOverlay as={Link} to={`/events/${event.id}`}>{event.short_title}</LinkOverlay>
+          </Heading>
+          <Box>
+            <Text fontSize="sm" color="gray.600">
+              {event.venue.name_v2}
+            </Text>
+            <Text fontSize="sm" color="gray.600">
+              {event.venue.display_location}
+            </Text>
+          </Box>
+          <Tooltip
+            hasArrow
+            label={formatDateTime(event.datetime_utc)}
           >
-            <Link 
-              to={`/events/${event.id}`}
+            <Text 
+              fontSize="sm"
+              fontWeight="bold"
+              color="gray.600"
+              justifySelf="end"
+              data-testid="date"
             >
-              {formatDateTime(event.datetime_utc, event.venue.timezone)}
-            </Link>
-          </Text>
-        </Tooltip>
-      </Stack>
+              <Link 
+                to={`/events/${event.id}`}
+              >
+                {formatDateTime(event.datetime_utc, event.venue.timezone)}
+              </Link>
+            </Text>
+          </Tooltip>
+        </Stack>
+  `     <FavouriteButton
+          id={event.id}
+          itemType="event"
+        />
+      </Flex>
+     
     </CardBody>
   </LinkBox>
 );

@@ -10,14 +10,17 @@ import {
   SimpleGrid,
   Box,
   Spinner,
-  AspectRatio,
+  AspectRatio
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
+import FavouriteButton from './FavouriteButton';
 
 interface StatsProps {
   venue: {
+    id: number;
+    name: string;
     city: string;
     country: string;
     capacity: number;
@@ -86,6 +89,13 @@ const Stats: React.FC<StatsProps> = ({ venue }) => (
         <StatNumber fontSize="xl">{venue.capacity}</StatNumber>
       </Stat>
     )}
+    <Stat>
+      <StatLabel display="flex">
+        <FavouriteButton
+          id={venue.id}
+        />
+      </StatLabel>
+    </Stat>
   </SimpleGrid>
 );
 
