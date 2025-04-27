@@ -1,9 +1,9 @@
 type ItemType = 'venue' | 'event';
 
-interface FavouritesData {
-    venues: Record<string, { isFavourite: boolean }>;
-    events: Record<string, { isFavourite: boolean }>;
-    [key: string]: Record<string, { isFavourite: boolean }>;
+export interface FavouritesData {
+    venues: Record<string, boolean>;
+    events: Record<string, boolean>;
+    [key: string]: Record<string, boolean>;
 }
 
 const handleAddToFavourites = (id: number, type: ItemType): boolean => {
@@ -24,12 +24,21 @@ const handleAddToFavourites = (id: number, type: ItemType): boolean => {
         favourites[collectionKey] = {};
     }
 
-    const currentStatus = favourites[collectionKey][id]?.isFavourite ?? false;
+    const currentStatus = favourites[collectionKey][id] ?? false;
     const newStatus = !currentStatus;
-    favourites[collectionKey][id] = { isFavourite: newStatus };
+
+    if (newStatus) {
+        favourites[collectionKey][id] = true;
+    } else {
+        delete favourites[collectionKey][id];
+    }
 
     localStorage.setItem('favourites', JSON.stringify(favourites));
 
+    // dispatch a global event so every button can hear about the change
+    window.dispatchEvent(new Event('favouritesUpdated'))
+
     return newStatus;
 };
+
 export default handleAddToFavourites;

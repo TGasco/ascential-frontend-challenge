@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import handleAddToFavourites from '../utils/addToFavourites';
 import { IconButton } from '@chakra-ui/react';
 import { HiHeart } from 'react-icons/hi';
@@ -8,22 +8,35 @@ interface FavouriteButtonProps {
   itemType?: 'venue' | 'event';
 }
 
-const FavouriteButton: React.FC<FavouriteButtonProps> = ({ id, itemType = 'venue' }) => {
-    // Initialize state from localStorage or default to false
+const FavouriteButton: React.FC<FavouriteButtonProps> = ({
+  id,
+  itemType = 'venue',
+}) => {
   const [isFavourite, setIsFavourite] = useState(() => {
-    const storedData = localStorage.getItem('favourites');
-    const favourites = storedData ? JSON.parse(storedData) : { venues: {}, events: {} };
-    const keyMap: Record<string, keyof typeof favourites> = {
-      venue: 'venues',
-      event: 'events',
-    };
-    const collectionKey = keyMap[itemType];
-    return favourites[collectionKey]?.[id]?.isFavourite ?? false;
-  });
+    const stored = localStorage.getItem('favourites');
+    const favourites = stored
+      ? JSON.parse(stored)
+      : { venues: {}, events: {} };
+    const key = itemType === 'venue' ? 'venues' : 'events';
+    return favourites[key][id] ?? false;
+  })
 
-  // Toggle favourite status
+  // listen for all updates and re-read localStorage
+  useEffect(() => {
+    const sync = () => {
+      const stored = localStorage.getItem('favourites')!;
+      const favourites = JSON.parse(stored);
+      const key = itemType === 'venue' ? 'venues' : 'events';
+      setIsFavourite(favourites[key][id] ?? false);
+    }
+
+    window.addEventListener('favouritesUpdated', sync);
+    return () =>
+      window.removeEventListener('favouritesUpdated', sync);
+  }, [id, itemType]);
+
   const handleToggle = () => {
-    // Update the state
+    // this will also re-dispatch the event
     setIsFavourite(handleAddToFavourites(id, itemType));
   };
 
@@ -36,7 +49,6 @@ const FavouriteButton: React.FC<FavouriteButtonProps> = ({ id, itemType = 'venue
       variant={isFavourite ? 'solid' : 'outline'}
       rounded="full"
     />
-  );
-};
-
+  )
+}
 export default FavouriteButton;

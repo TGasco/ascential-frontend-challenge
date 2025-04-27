@@ -57,8 +57,13 @@ const Venue: React.FC = () => {
           { label: venue.name },
         ]} 
       />
-      <Flex bgColor="gray.200" p={[4, 6]}>
+      <Flex bgColor="gray.200" p={[4, 6]}
+        justify="space-between"
+      >
         <Heading>{venue.name}</Heading>
+        <FavouriteButton
+          id={venue.id}
+        />
       </Flex>
       <Stats venue={venue} />
       <Map location={venue.location} />
@@ -89,13 +94,6 @@ const Stats: React.FC<StatsProps> = ({ venue }) => (
         <StatNumber fontSize="xl">{venue.capacity}</StatNumber>
       </Stat>
     )}
-    <Stat>
-      <StatLabel display="flex">
-        <FavouriteButton
-          id={venue.id}
-        />
-      </StatLabel>
-    </Stat>
   </SimpleGrid>
 );
 
