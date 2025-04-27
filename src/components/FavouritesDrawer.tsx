@@ -51,8 +51,12 @@ const FavouritesDrawer: React.FC<FavouritesDrawerProps> = ({ isOpen, onClose }) 
         window.removeEventListener('favouritesUpdated', sync)
     }, []);
 
-    const eventIds = Object.keys(favourites.events).filter(k => favourites.events[k])
-    const venueIds = Object.keys(favourites.venues).filter(k => favourites.venues[k])
+    const eventIds = favourites?.events
+      ? Object.keys(favourites.events).filter(k => favourites.events[k])
+      : [];
+    const venueIds = favourites?.venues
+      ? Object.keys(favourites.venues).filter(k => favourites.venues[k])
+      : [];
 
     return (
         <Drawer isOpen={isOpen} placement="start" onClose={onClose}>

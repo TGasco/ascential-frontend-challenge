@@ -48,6 +48,8 @@ const FavouriteButton: React.FC<FavouriteButtonProps> = ({
       onClick={handleToggle}
       variant={isFavourite ? 'solid' : 'outline'}
       rounded="full"
+      data-testid="favourite-button"
+      {...isFavourite ? { 'data-favourite': true } : {}}
     />
   )
 }

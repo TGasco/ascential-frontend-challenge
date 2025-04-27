@@ -31,6 +31,22 @@ describe('getSeatGeekUrl', () => {
     expect(url).toContain('client_id=test_client_id');
     expect(url).toContain('client_secret=test_client_secret');
   });
+
+  it('constructs the correct URL with multiple values for the same key', () => {
+    const url = getSeatGeekUrl('/events', { q: ['music', 'sports'] });
+    expect(url).toContain('https://api.seatgeek.com/2/events?');
+    expect(url).toContain('q=music');
+    expect(url).toContain('q=sports');
+    expect(url).toContain('client_id=test_client_id');
+    expect(url).toContain('client_secret=test_client_secret');
+  });
+
+  it('constructs the correct URL with no options', () => {
+    const url = getSeatGeekUrl('/events');
+    expect(url).toContain('https://api.seatgeek.com/2/events?');
+    expect(url).toContain('client_id=test_client_id');
+    expect(url).toContain('client_secret=test_client_secret');
+  });
 });
 
 describe('useSeatGeek', () => {

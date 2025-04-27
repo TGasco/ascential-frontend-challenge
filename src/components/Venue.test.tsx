@@ -95,4 +95,10 @@ describe('Venue component', () => {
         renderWithRouter();
         expect(await screen.findByRole('heading', { name: /test venue/i })).toBeInTheDocument();
     });
+
+    it('renders the favourite button', async () => {
+        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: mockVenue, error: null });
+        renderWithRouter();
+        expect(await screen.findByRole('button', { name: /add to favourites/i })).toBeInTheDocument();
+    });
 });
