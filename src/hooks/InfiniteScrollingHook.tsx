@@ -27,11 +27,11 @@ export function useInfiniteScroll<T, Q = undefined>({
     setError(null);
     fetchPage(page, query)
       .then(({ items: newItems, hasMore: more }) => {
-        setItems(prev => [...prev, ...newItems]);
+        setItems((prev) => [...prev, ...newItems]);
         setHasMore(more);
-        setPage(prev => prev + 1);
+        setPage((prev) => prev + 1);
       })
-      .catch(err => setError(err))
+      .catch((err) => setError(err))
       .finally(() => setLoading(false));
   }, [fetchPage, page, query, loading, hasMore]);
 

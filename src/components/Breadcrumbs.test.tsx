@@ -14,7 +14,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={items} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Category')).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={items} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(2);
@@ -38,7 +38,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={items} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const current = screen.getByText('Product').closest('[aria-current]');
     expect(current).toBeTruthy();
@@ -51,7 +51,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={items} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     // There should be separators between items.length - 1
     const separators = screen.getAllByTestId('chakra-breadcrumb-separator');
@@ -62,7 +62,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={[{ label: 'Only' }]} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText('Only')).toBeInTheDocument();
     expect(screen.queryByRole('link')).toBeNull();
@@ -75,7 +75,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={[]} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.queryAllByRole('listitem')).toHaveLength(0);
   });
@@ -89,7 +89,7 @@ describe('Breadcrumbs', () => {
     render(
       <MemoryRouter>
         <Breadcrumbs items={allLinks} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(2);

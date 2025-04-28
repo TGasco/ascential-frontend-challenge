@@ -8,7 +8,7 @@ describe('Home component', () => {
     return render(
       <MemoryRouter>
         <Home />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   }
 
@@ -38,7 +38,9 @@ describe('Home component', () => {
   it('PageLink has correct styles and hover effect', async () => {
     setup();
     const user = userEvent.setup();
-    const venuesBox = screen.getByText(/Browse Venues/i).closest('[role="group"]') || screen.getByText(/Browse Venues/i).parentElement?.parentElement;
+    const venuesBox =
+      screen.getByText(/Browse Venues/i).closest('[role="group"]') ||
+      screen.getByText(/Browse Venues/i).parentElement?.parentElement;
     expect(venuesBox).toHaveStyle('background: gray.50');
     // Simulate hover
     if (venuesBox) {
@@ -53,7 +55,7 @@ describe('Home component', () => {
     const { asFragment } = render(
       <MemoryRouter>
         <Home />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(asFragment()).toMatchSnapshot();
   });

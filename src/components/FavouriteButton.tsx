@@ -8,18 +8,13 @@ interface FavouriteButtonProps {
   itemType?: 'venue' | 'event';
 }
 
-const FavouriteButton: React.FC<FavouriteButtonProps> = ({
-  id,
-  itemType = 'venue',
-}) => {
+const FavouriteButton: React.FC<FavouriteButtonProps> = ({ id, itemType = 'venue' }) => {
   const [isFavourite, setIsFavourite] = useState(() => {
     const stored = localStorage.getItem('favourites');
-    const favourites = stored
-      ? JSON.parse(stored)
-      : { venues: {}, events: {} };
+    const favourites = stored ? JSON.parse(stored) : { venues: {}, events: {} };
     const key = itemType === 'venue' ? 'venues' : 'events';
     return favourites[key][id] ?? false;
-  })
+  });
 
   // listen for all updates and re-read localStorage
   useEffect(() => {
@@ -28,11 +23,10 @@ const FavouriteButton: React.FC<FavouriteButtonProps> = ({
       const favourites = JSON.parse(stored);
       const key = itemType === 'venue' ? 'venues' : 'events';
       setIsFavourite(favourites[key][id] ?? false);
-    }
+    };
 
     window.addEventListener('favouritesUpdated', sync);
-    return () =>
-      window.removeEventListener('favouritesUpdated', sync);
+    return () => window.removeEventListener('favouritesUpdated', sync);
   }, [id, itemType]);
 
   const handleToggle = () => {
@@ -49,8 +43,8 @@ const FavouriteButton: React.FC<FavouriteButtonProps> = ({
       variant={isFavourite ? 'solid' : 'outline'}
       rounded="full"
       data-testid="favourite-button"
-      {...isFavourite ? { 'data-favourite': true } : {}}
+      {...(isFavourite ? { 'data-favourite': true } : {})}
     />
-  )
-}
+  );
+};
 export default FavouriteButton;

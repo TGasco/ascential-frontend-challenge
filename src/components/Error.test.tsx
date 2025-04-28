@@ -16,8 +16,8 @@ describe('Error component', () => {
     render(<Error />);
     expect(
       screen.getByText(
-        /If the problem persists, try to refresh the page or wait a few minutes and try again./i
-      )
+        /If the problem persists, try to refresh the page or wait a few minutes and try again./i,
+      ),
     ).toBeInTheDocument();
   });
 

@@ -1,19 +1,15 @@
 import React from 'react';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from '@chakra-ui/react';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 
-interface Breadcrumb {
+interface BreadcrumbItemData {
   label: string;
   to?: string;
 }
 
 interface BreadcrumbProps {
-  items: Breadcrumb[];
+  items: BreadcrumbItemData[];
 }
 
 const Breadcrumbs: React.FC<BreadcrumbProps> = ({ items }) => (

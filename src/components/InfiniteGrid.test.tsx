@@ -5,13 +5,20 @@ import InfiniteGrid, { fetchAbstractPage } from './InfiniteGrid';
 import { useInfiniteScroll } from '../hooks/InfiniteScrollingHook';
 
 vi.mock('../hooks/InfiniteScrollingHook');
-vi.mock('./Error', () => ({ __esModule: true, default: () => <div data-testid="error-component" /> }));
+vi.mock('./Error', () => ({
+  __esModule: true,
+  default: () => <div data-testid="error-component" />,
+}));
 
 const mockUseInfiniteScroll = useInfiniteScroll as unknown as Mock;
 
 describe('InfiniteGrid component', () => {
   const breadcrumbs = <nav data-testid="breadcrumbs">crumbs</nav>;
-  const renderItem = (item: string) => <div key={item} data-testid="item-{item}">{item}</div>;
+  const renderItem = (item: string) => (
+    <div key={item} data-testid="item-{item}">
+      {item}
+    </div>
+  );
   const dummyFetchPage = vi.fn();
 
   beforeEach(() => {
@@ -33,7 +40,7 @@ describe('InfiniteGrid component', () => {
         query={{}}
         renderItem={renderItem}
         breadcrumbs={breadcrumbs}
-      />
+      />,
     );
 
     expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();
@@ -59,7 +66,7 @@ describe('InfiniteGrid component', () => {
         query={{}}
         renderItem={renderItem}
         breadcrumbs={breadcrumbs}
-      />
+      />,
     );
 
     expect(screen.getByTestId('chakra-spinner')).toBeInTheDocument();
@@ -80,7 +87,7 @@ describe('InfiniteGrid component', () => {
         query={{}}
         renderItem={renderItem}
         breadcrumbs={breadcrumbs}
-      />
+      />,
     );
 
     expect(screen.getByTestId('error-component')).toBeInTheDocument();
@@ -101,7 +108,7 @@ describe('InfiniteGrid component', () => {
         query={{}}
         renderItem={renderItem}
         breadcrumbs={breadcrumbs}
-      />
+      />,
     );
 
     expect(screen.getByText('last')).toBeInTheDocument();
@@ -125,7 +132,7 @@ describe('InfiniteGrid component', () => {
         query={{ term: 'test' }}
         renderItem={renderItem}
         breadcrumbs={breadcrumbs}
-      />
+      />,
     );
 
     expect(spy).not.toHaveBeenCalled();

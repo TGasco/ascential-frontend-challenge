@@ -29,7 +29,7 @@ describe('formatDateTime', () => {
   });
 
   it('should throw if an invalid date is provided', () => {
-    // @ts-expect-error
+    // @ts-expect-error Invalid date type
     expect(() => formatDateTime('invalid-date')).toThrow();
   });
 

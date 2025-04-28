@@ -39,7 +39,7 @@ vi.mock('./InfiniteGrid', () => {
       <div>
         <div data-testid="infinite-grid">{breadcrumbs}</div>
         {renderItem &&
-          [1, 2].map(i =>
+          [1, 2].map((i) =>
             renderItem({
               id: i,
               short_title: `Event ${i}`,
@@ -50,7 +50,7 @@ vi.mock('./InfiniteGrid', () => {
                 display_location: `Location ${i}`,
                 timezone: 'UTC',
               },
-            })
+            }),
           )}
       </div>
     ),
@@ -60,7 +60,7 @@ vi.mock('./InfiniteGrid', () => {
 
 // Mock formatDateTime
 vi.spyOn(formatDateTimeModule, 'formatDateTime').mockImplementation((date: Date, tz?: string) =>
-  tz ? `formatted(${date.toISOString()},${tz})` : `formatted(${date.toISOString()})`
+  tz ? `formatted(${date.toISOString()},${tz})` : `formatted(${date.toISOString()})`,
 );
 
 const baseEvent: EventProps = {
@@ -80,7 +80,7 @@ describe('EventItem', () => {
     render(
       <MemoryRouter>
         <EventItem event={baseEvent} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByRole('img')).toHaveAttribute('src', 'performer.jpg');
     expect(screen.getByRole('heading', { name: /test event/i })).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe('EventItem', () => {
     render(
       <MemoryRouter>
         <EventItem event={baseEvent} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     // Tooltip label
     expect(screen.getByTitle(/^formatted/)).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('EventItem', () => {
     render(
       <MemoryRouter>
         <EventItem event={baseEvent} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const favBtn = screen.getByTestId('favourite-btn');
     expect(favBtn).toHaveAttribute('data-id', '123');
@@ -115,7 +115,7 @@ describe('EventItem', () => {
     render(
       <MemoryRouter>
         <EventItem event={baseEvent} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getAllByRole('link', { name: /test event/i })[0];
     expect(link).toHaveAttribute('href', '/events/123');
@@ -125,7 +125,7 @@ describe('EventItem', () => {
     render(
       <MemoryRouter>
         <EventItem event={baseEvent} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const dateLink = screen.getByTestId('date').querySelector('a');
     expect(dateLink).toHaveAttribute('href', '/events/123');
@@ -141,7 +141,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByTestId('breadcrumbs')).toHaveTextContent('Home > Events');
   });
@@ -150,7 +150,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getAllByRole('heading', { name: /event/i })).toHaveLength(2);
     expect(screen.getAllByTestId('favourite-btn')).toHaveLength(2);
@@ -160,7 +160,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getAllByRole('img')[0]).toHaveAttribute('src', 'img1.jpg');
     expect(screen.getAllByRole('img')[1]).toHaveAttribute('src', 'img2.jpg');
@@ -170,7 +170,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText('Venue 1')).toBeInTheDocument();
     expect(screen.getByText('Venue 2')).toBeInTheDocument();
@@ -182,7 +182,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getAllByText(/formatted\(.*UTC\)/)).toHaveLength(2);
   });
@@ -192,7 +192,7 @@ describe('Events', () => {
     render(
       <MemoryRouter>
         <Events />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByTestId('infinite-grid')).toBeInTheDocument();
   });

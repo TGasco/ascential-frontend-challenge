@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SimpleGrid, Flex, Spinner, Text } from '@chakra-ui/react';
 import { useInfiniteScroll } from '../hooks/InfiniteScrollingHook';
@@ -6,11 +5,11 @@ import Error from './Error';
 import { getSeatGeekUrl } from '../utils/useSeatGeek';
 
 interface InfiniteGridProps<T, Q> {
-    fetchPage: (page: number, query: Q) => Promise<{ items: T[]; hasMore: boolean }>;
-    query: Q;
-    renderItem: (item: T) => React.ReactNode;
-    breadcrumbs: React.ReactNode;
-    minChildWidth?: string;
+  fetchPage: (page: number, query: Q) => Promise<{ items: T[]; hasMore: boolean }>;
+  query: Q;
+  renderItem: (item: T) => React.ReactNode;
+  breadcrumbs: React.ReactNode;
+  minChildWidth?: string;
 }
 
 export async function fetchAbstractPage<T>(
@@ -18,7 +17,7 @@ export async function fetchAbstractPage<T>(
   itemKey: string,
   page: number,
   query: Record<string, string>,
-  perPage: string = '24'
+  perPage: string = '24',
 ): Promise<{ items: T[]; hasMore: boolean }> {
   const params = { ...query, page: page.toString(), per_page: perPage };
   const url = getSeatGeekUrl(endpoint, params);
@@ -37,13 +36,10 @@ function InfiniteGrid<T, Q>({
   breadcrumbs,
   minChildWidth = '350px',
 }: InfiniteGridProps<T, Q>) {
-  const {
-    items,
-    loading,
-    error,
-    hasMore,
-    observerRef,
-  } = useInfiniteScroll<T, Q>({ fetchPage, query });
+  const { items, loading, error, hasMore, observerRef } = useInfiniteScroll<T, Q>({
+    fetchPage,
+    query,
+  });
 
   return (
     <>

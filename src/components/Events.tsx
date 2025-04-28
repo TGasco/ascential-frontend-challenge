@@ -9,8 +9,8 @@ import {
   Stack,
   Image,
   LinkBox,
-  LinkOverlay, 
-  Tooltip
+  LinkOverlay,
+  Tooltip,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from './Breadcrumbs';
@@ -47,14 +47,14 @@ const Events: React.FC = () => (
   <InfiniteGrid<EventProps, Record<string, string>>
     fetchPage={fetchEventsPage}
     query={{ sort: 'score.desc' }}
-    renderItem={event => <EventItem key={event.id} event={event} />}
+    renderItem={(event) => <EventItem key={event.id} event={event} />}
     breadcrumbs={<Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Events' }]} />}
   />
 );
 
 export const EventItem: React.FC<EventItemProps> = ({ event }) => (
-  <LinkBox 
-    as={Card} 
+  <LinkBox
+    as={Card}
     variant="outline"
     overflow="hidden"
     bg="gray.50"
@@ -63,12 +63,12 @@ export const EventItem: React.FC<EventItemProps> = ({ event }) => (
   >
     <Image src={event.performers[0].image} />
     <CardBody>
-      <Flex direction={["column", "row"]}
-        align="center" 
-        justify="space-between">
+      <Flex direction={['column', 'row']} align="center" justify="space-between">
         <Stack spacing="2">
           <Heading size="md">
-            <LinkOverlay as={Link} to={`/events/${event.id}`}>{event.short_title}</LinkOverlay>
+            <LinkOverlay as={Link} to={`/events/${event.id}`}>
+              {event.short_title}
+            </LinkOverlay>
           </Heading>
           <Box>
             <Text fontSize="sm" color="gray.600">
@@ -78,31 +78,22 @@ export const EventItem: React.FC<EventItemProps> = ({ event }) => (
               {event.venue.display_location}
             </Text>
           </Box>
-          <Tooltip
-            hasArrow
-            label={formatDateTime(event.datetime_utc)}
-          >
-            <Text 
+          <Tooltip hasArrow label={formatDateTime(event.datetime_utc)}>
+            <Text
               fontSize="sm"
               fontWeight="bold"
               color="gray.600"
               justifySelf="end"
               data-testid="date"
             >
-              <Link 
-                to={`/events/${event.id}`}
-              >
+              <Link to={`/events/${event.id}`}>
                 {formatDateTime(event.datetime_utc, event.venue.timezone)}
               </Link>
             </Text>
           </Tooltip>
         </Stack>
-       <FavouriteButton
-          id={event.id}
-          itemType="event"
-        />
+        <FavouriteButton id={event.id} itemType="event" />
       </Flex>
-     
     </CardBody>
   </LinkBox>
 );
