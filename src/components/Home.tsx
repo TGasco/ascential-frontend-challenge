@@ -1,7 +1,15 @@
 import React from 'react';
-import { Flex, Heading, SimpleGrid, type LinkProps, LinkOverlay, LinkBox, Box } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  SimpleGrid,
+  type LinkProps,
+  LinkOverlay,
+  LinkBox,
+  Box,
+} from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 interface PageLinkProps extends LinkProps {
   children: React.ReactNode;
@@ -17,20 +25,22 @@ const Home: React.FC = () => (
 
 const PageLink: React.FC<PageLinkProps> = ({ url, children }) => (
   <LinkBox as={Box}>
-    <Flex 
+    <Flex
       p="6"
       bg="gray.50"
       borderColor="gray.200"
       borderWidth="1px"
-      justifyContent="space-between" 
+      justifyContent="space-between"
       alignItems="center"
       rounded="lg"
-      _hover={{ bg: "gray.100" }}
+      _hover={{ bg: 'gray.100' }}
     >
       <Heading size="md">
-        <LinkOverlay as={Link} to={url}>{children}</LinkOverlay>
+        <LinkOverlay as={Link} to={url}>
+          {children}
+        </LinkOverlay>
       </Heading>
-      <ArrowForwardIcon boxSize={6} data-testid="chakra-arrow-forward"/>
+      <ArrowForwardIcon boxSize={6} data-testid="chakra-arrow-forward" />
     </Flex>
   </LinkBox>
 );

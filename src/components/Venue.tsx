@@ -10,7 +10,7 @@ import {
   SimpleGrid,
   Box,
   Spinner,
-  AspectRatio
+  AspectRatio,
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
@@ -24,14 +24,14 @@ interface StatsProps {
     city: string;
     country: string;
     capacity: number;
-  }
+  };
 }
 
 interface MapProps {
   location: {
     lat: number;
     lon: number;
-  }
+  };
 }
 
 const Venue: React.FC = () => {
@@ -45,7 +45,7 @@ const Venue: React.FC = () => {
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
         <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
-    )
+    );
   }
 
   return (
@@ -55,15 +55,11 @@ const Venue: React.FC = () => {
           { label: 'Home', to: '/' },
           { label: 'Venues', to: '/venues' },
           { label: venue.name },
-        ]} 
+        ]}
       />
-      <Flex bgColor="gray.200" p={[4, 6]}
-        justify="space-between"
-      >
+      <Flex bgColor="gray.200" p={[4, 6]} justify="space-between">
         <Heading>{venue.name}</Heading>
-        <FavouriteButton
-          id={venue.id}
-        />
+        <FavouriteButton id={venue.id} />
       </Flex>
       <Stats venue={venue} />
       <Map location={venue.location} />
@@ -72,13 +68,7 @@ const Venue: React.FC = () => {
 };
 
 const Stats: React.FC<StatsProps> = ({ venue }) => (
-  <SimpleGrid 
-    columns={[1, 1, 2]} 
-    borderWidth="1px" 
-    borderRadius="md" 
-    m="6" 
-    p="4" 
-  >
+  <SimpleGrid columns={[1, 1, 2]} borderWidth="1px" borderRadius="md" m="6" p="4">
     <Stat>
       <StatLabel display="flex">
         <Box as="span">Location</Box>

@@ -12,7 +12,7 @@ import {
   Spinner,
   Button,
   Stack,
-  Tooltip
+  Tooltip,
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
@@ -28,7 +28,7 @@ interface EventInfoProps {
     datetime_utc: Date;
     venue: Venue;
     url: string;
-  }
+  };
 }
 
 const Event: React.FC = () => {
@@ -42,19 +42,19 @@ const Event: React.FC = () => {
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
         <Spinner size="lg" data-testid="chakra-spinner" />
       </Flex>
-    )
+    );
   }
 
   return (
     <>
-      <Breadcrumbs 
+      <Breadcrumbs
         items={[
           { label: 'Home', to: '/' },
           { label: 'Events', to: '/events' },
           { label: event.short_title },
-        ]} 
+        ]}
       />
-      <Flex bgColor='gray.200' p={[4, 6]}>
+      <Flex bgColor="gray.200" p={[4, 6]}>
         <Heading>{event.short_title}</Heading>
       </Flex>
       <EventInfo event={event} />
@@ -64,12 +64,7 @@ const Event: React.FC = () => {
 
 const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
   <Stack spacing="6" m="6">
-    <SimpleGrid 
-      columns={[1, 1, 2]} 
-      borderWidth="1px" 
-      borderRadius="md"
-      p="4" 
-    >
+    <SimpleGrid columns={[1, 1, 2]} borderWidth="1px" borderRadius="md" p="4">
       <Stat>
         <StatLabel display="flex">
           <Box as="span">Venue</Box>
@@ -90,16 +85,15 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         </StatNumber>
       </Stat>
       <Stat>
-      <StatLabel display="flex">
-        <FavouriteButton
-          id={event.id}
-          itemType="event"
-        />
-      </StatLabel>
-    </Stat>
+        <StatLabel display="flex">
+          <FavouriteButton id={event.id} itemType="event" />
+        </StatLabel>
+      </Stat>
     </SimpleGrid>
     <Flex>
-      <Button as={'a'} href={event.url} minWidth="0">Buy Tickets</Button>
+      <Button as={'a'} href={event.url} minWidth="0">
+        Buy Tickets
+      </Button>
     </Flex>
   </Stack>
 );

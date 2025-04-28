@@ -21,6 +21,10 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vitest"]
   },
-  "include": ["src"],
+  "include": ["src",
+    "setupTests.ts",
+    "vite-env.d.ts",
+    "vite.config.ts",
+    "vitest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

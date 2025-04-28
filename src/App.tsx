@@ -6,7 +6,7 @@ import Venue from './components/Venue';
 import Events from './components/Events';
 import Event from './components/Event';
 import { Flex, Heading, IconButton } from '@chakra-ui/react';
-import { IoMenu } from "react-icons/io5"
+import { IoMenu } from 'react-icons/io5';
 import FavouritesDrawer from './components/FavouritesDrawer';
 
 const App: React.FC = () => {
@@ -28,12 +28,7 @@ const App: React.FC = () => {
 };
 
 const Nav: React.FC<{ onOpen: () => void }> = ({ onOpen }) => (
-  <Flex
-    as="nav"
-    bg="gray.700"
-    color="white"
-    padding="24px"
-  >
+  <Flex as="nav" bg="gray.700" color="white" padding="24px">
     <IconButton
       aria-label="Open Favourites Drawer"
       icon={<IoMenu size="2em" />}
