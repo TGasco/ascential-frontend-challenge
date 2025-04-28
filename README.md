@@ -2,7 +2,7 @@
 
 ### [👉 Go to the challenge 👈](./CHALLENGE.md)
 
-### [🚀 See the app in action 🚀](https://ascential-frontend-challenge.development.platform-team.com)
+### [🚀 See the app in action 🚀](http://ascential-frontend-challenge.s3-website-us-east-1.amazonaws.com)
 
 ## Develop
 - create `.env` file based on `.env.sample`

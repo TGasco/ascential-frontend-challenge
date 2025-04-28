@@ -97,7 +97,7 @@ export const EventItem: React.FC<EventItemProps> = ({ event }) => (
             </Text>
           </Tooltip>
         </Stack>
-  `     <FavouriteButton
+       <FavouriteButton
           id={event.id}
           itemType="event"
         />
