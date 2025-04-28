@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-  SimpleGrid,
   Flex,
-  Spinner,
   Heading,
   Text,
   Box,
@@ -16,10 +14,9 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from './Breadcrumbs';
-import Error from './Error';
-import { useSeatGeek } from '../utils/useSeatGeek';
 import { formatDateTime } from '../utils/formatDateTime';
 import FavouriteButton from './FavouriteButton';
+import InfiniteGrid, { fetchAbstractPage } from './InfiniteGrid';
 
 export interface Performers {
   image: string;
@@ -43,36 +40,19 @@ interface EventItemProps {
   event: EventProps;
 }
 
-const Events: React.FC = () => {
-  const { data, error } = useSeatGeek('/events', { 
-    type: 'concert',
-    sort: 'score.desc',
-    per_page: '24',
-  });
+const fetchEventsPage = (page: number, query: Record<string, string>) =>
+  fetchAbstractPage<EventProps>('/events', 'events', page, query, '12');
 
-  if (error) return <Error />;
+const Events: React.FC = () => (
+  <InfiniteGrid<EventProps, Record<string, string>>
+    fetchPage={fetchEventsPage}
+    query={{ sort: 'score.desc' }}
+    renderItem={event => <EventItem key={event.id} event={event} />}
+    breadcrumbs={<Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Events' }]} />}
+  />
+);
 
-  if (!data) {
-    return (
-      <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" data-testid="chakra-spinner" />
-      </Flex>
-    )
-  }
-
-  return (
-    <>
-      <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Events' }]} />
-      <SimpleGrid spacing="6" m="6" minChildWidth="350px">
-        {data.events?.map((event: EventProps) => (
-          <EventItem key={event.id.toString()} event={event} />
-        ))}
-      </SimpleGrid>
-    </>
-  );
-};
-
-const EventItem: React.FC<EventItemProps> = ({ event }) => (
+export const EventItem: React.FC<EventItemProps> = ({ event }) => (
   <LinkBox 
     as={Card} 
     variant="outline"

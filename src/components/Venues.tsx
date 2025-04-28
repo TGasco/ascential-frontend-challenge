@@ -1,10 +1,9 @@
 import React from 'react';
-import { SimpleGrid, Flex, Spinner, Heading, Text, Box, Badge, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import { Flex, Heading, Text, Box, Badge, LinkBox, LinkOverlay } from '@chakra-ui/react';
 import { Link as BrowserLink } from 'react-router-dom';
-import { useSeatGeek } from '../utils/useSeatGeek';
-import Error from './Error';
 import Breadcrumbs from './Breadcrumbs';
 import FavouriteButton from './FavouriteButton';
+import InfiniteGrid, { fetchAbstractPage } from './InfiniteGrid';
 
 export interface VenueProps {
   id: number;
@@ -18,33 +17,17 @@ interface VenuItemProps {
   venue: VenueProps;
 }
 
-const Venues: React.FC = () => {
-  const { data, error } = useSeatGeek('/venues', { 
-    sort: 'score.desc',
-    per_page: '24',
-  });
+const fetchVenuesPage = (page: number, query: Record<string, string>) =>
+  fetchAbstractPage<VenueProps>('/venues', 'venues', page, query, '24');
 
-  if (error) return <Error />;
-
-  if (!data) {
-    return (
-      <Flex justifyContent="center" alignItems="center" minHeight="50vh">
-        <Spinner size="lg" data-testid="chakra-spinner" />
-      </Flex>
-    )
-  }
-
-  return (
-    <>
-      <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Venues' }]} />
-      <SimpleGrid spacing="6" m="6" minChildWidth="350px">
-        {data.venues?.map((venue: VenueProps) => (
-          <VenueItem key={venue.id.toString()} venue={venue} />
-        ))}
-      </SimpleGrid>
-    </>
-  );
-};
+const Venues: React.FC = () => (
+  <InfiniteGrid<VenueProps, Record<string, string>>
+    fetchPage={fetchVenuesPage}
+    query={{ sort: 'score.desc' }}
+    renderItem={venue => <VenueItem key={venue.id} venue={venue} />}
+    breadcrumbs={<Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Venues' }]} />}
+  />
+);
 
 const VenueItem: React.FC<VenuItemProps> = ({ venue }) => (
   <LinkBox>

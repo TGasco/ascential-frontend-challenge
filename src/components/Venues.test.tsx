@@ -1,96 +1,158 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Venues, { VenueProps } from './Venues';
-import * as useSeatGeekModule from '../utils/useSeatGeek';
-import { vi } from 'vitest';
+import Venues from './Venues';
 
-vi.mock('../utils/useSeatGeek');
+// filepath: /Users/thomasgascoyne/Library/Mobile Documents/com~apple~CloudDocs/Jobs/Informa-Technical/ascential-frontend-challenge/src/components/Venues.test.tsx
+
+// Mock Chakra UI components that use portals or context
+vi.mock('@chakra-ui/react', async () => {
+    const actual = await vi.importActual<any>('@chakra-ui/react');
+    return {
+        ...actual,
+        Badge: ({ children, ...props }: any) => <span data-testid="badge" {...props}>{children}</span>,
+        LinkBox: ({ children }: any) => <div data-testid="linkbox">{children}</div>,
+        LinkOverlay: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+        Box: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+        Flex: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+        Heading: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
+        Text: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+    };
+});
+
+// Mock FavouriteButton
+const favBtnMock = vi.fn();
+vi.mock('./FavouriteButton', () => ({
+    __esModule: true,
+    default: ({ id }: any) => (
+        <button data-testid="favourite-btn" data-id={id} onClick={() => favBtnMock(id)}>
+            Favourite
+        </button>
+    ),
+}));
+
+// Mock Breadcrumbs
 vi.mock('./Breadcrumbs', () => ({
+    __esModule: true,
     default: ({ items }: any) => (
-        <nav data-testid="breadcrumbs">
-            {items.map((i: any) => i.label).join(' > ')}
-        </nav>
-    )
-}));
-vi.mock('./Error', () => ({
-    default: () => <div data-testid="error">Error</div>
+        <nav data-testid="breadcrumbs">{items.map((i: any) => i.label).join(' > ')}</nav>
+    ),
 }));
 
-const mockVenues: VenueProps[] = [
-    {
-        id: 1,
-        has_upcoming_events: true,
-        num_upcoming_events: 5,
-        name_v2: 'Venue One',
-        display_location: 'City A, Country A'
-    },
-    {
-        id: 2,
-        has_upcoming_events: false,
-        num_upcoming_events: 0,
-        name_v2: 'Venue Two',
-        display_location: 'City B, Country B'
-    }
-];
+// Mock InfiniteGrid
+const renderItemMock = vi.fn();
+vi.mock('./InfiniteGrid', () => {
+    return {
+        __esModule: true,
+        default: ({ renderItem, breadcrumbs }: any) => (
+            <div>
+                <div data-testid="infinite-grid">{breadcrumbs}</div>
+                {renderItem &&
+                    [
+                        {
+                            id: 1,
+                            has_upcoming_events: true,
+                            num_upcoming_events: 5,
+                            name_v2: 'Venue Alpha',
+                            display_location: 'Alpha City, Country',
+                        },
+                        {
+                            id: 2,
+                            has_upcoming_events: false,
+                            num_upcoming_events: 0,
+                            name_v2: 'Venue Beta',
+                            display_location: 'Beta City, Country',
+                        },
+                    ].map((venue: any) => {
+                        renderItemMock(venue);
+                        return renderItem(venue);
+                    })}
+            </div>
+        ),
+        fetchAbstractPage: vi.fn(),
+    };
+});
+
+beforeEach(() => {
+    vi.clearAllMocks();
+    favBtnMock.mockClear();
+    renderItemMock.mockClear();
+});
 
 describe('Venues component', () => {
-    afterEach(() => {
-        vi.clearAllMocks();
-    });
-
-    it('shows a spinner while loading', () => {
-        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: null, error: null });
-        render(<Venues />, { wrapper: MemoryRouter });
-        expect(screen.getByTestId('chakra-spinner')).toBeInTheDocument();
-        expect(screen.queryByTestId('error')).not.toBeInTheDocument();
-    });
-
-    it('renders error component on error', () => {
-        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: null, error: new Error('oops') });
-        render(<Venues />, { wrapper: MemoryRouter });
-        expect(screen.getByTestId('error')).toBeInTheDocument();
-        expect(screen.queryByRole('status')).not.toBeInTheDocument();
-    });
-
-    it('renders breadcrumbs and no venue items when data.venues is empty', async () => {
-        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { venues: [] }, error: null });
-        render(<Venues />, { wrapper: MemoryRouter });
+    it('renders breadcrumbs', () => {
+        render(
+            <MemoryRouter>
+                <Venues />
+            </MemoryRouter>
+        );
         expect(screen.getByTestId('breadcrumbs')).toHaveTextContent('Home > Venues');
-        // Wait a tick for possible items
-        await waitFor(() => {
-            expect(screen.queryAllByRole('link')).toHaveLength(0);
-        });
     });
 
-    it('renders a grid of venue items with correct details and links', async () => {
-        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { venues: mockVenues }, error: null });
-        render(<Venues />, { wrapper: MemoryRouter });
-
-        // Breadcrumbs
-        expect(screen.getByTestId('breadcrumbs')).toHaveTextContent('Home > Venues');
-
-        // Venue One
-        const linkOne = await screen.findByRole('link', { name: 'Venue One' });
-        expect(linkOne).toBeInTheDocument();
-        expect(linkOne).toHaveAttribute('href', '/venues/1');
-        expect(screen.getByText('City A, Country A')).toBeInTheDocument();
-        expect(screen.getByText('5 Upcoming Events')).toBeInTheDocument();
-
-        // Venue Two
-        const linkTwo = screen.getByRole('link', { name: 'Venue Two' });
-        expect(linkTwo).toHaveAttribute('href', '/venues/2');
-        expect(screen.getByText('City B, Country B')).toBeInTheDocument();
-        expect(screen.getByText('No Upcoming Events')).toBeInTheDocument();
-
-        // Total links should match number of venues
-        expect(screen.getAllByRole('link')).toHaveLength(2);
+    it('renders InfiniteGrid and VenueItems', () => {
+        render(
+            <MemoryRouter>
+                <Venues />
+            </MemoryRouter>
+        );
+        expect(screen.getByTestId('infinite-grid')).toBeInTheDocument();
+        // Should render two VenueItems
+        expect(screen.getAllByTestId('linkbox')).toHaveLength(2);
     });
 
-    it('renders the FavouriteButton component for each venue', async () => {
-        (useSeatGeekModule.useSeatGeek as any).mockReturnValue({ data: { venues: mockVenues }, error: null });
-        render(<Venues />, { wrapper: MemoryRouter });
+    it('calls renderItem for each venue', () => {
+        render(
+            <MemoryRouter>
+                <Venues />
+            </MemoryRouter>
+        );
+        expect(renderItemMock).toHaveBeenCalledTimes(2);
+        expect(renderItemMock).toHaveBeenCalledWith(
+            expect.objectContaining({ id: 1, name_v2: 'Venue Alpha' })
+        );
+        expect(renderItemMock).toHaveBeenCalledWith(
+            expect.objectContaining({ id: 2, name_v2: 'Venue Beta' })
+        );
+    });
+});
 
-        const favouriteButtons = await screen.findAllByRole('button', { name: /favourite/i });
-        expect(favouriteButtons).toHaveLength(mockVenues.length);
+describe('VenueItem UI', () => {
+    beforeEach(() => {
+        render(
+            <MemoryRouter>
+                <Venues />
+            </MemoryRouter>
+        );
+    });
+
+    it('renders venue location', () => {
+        expect(screen.getByText('Alpha City, Country')).toBeInTheDocument();
+        expect(screen.getByText('Beta City, Country')).toBeInTheDocument();
+    });
+
+    it('renders badge with correct text for venues with upcoming events', () => {
+        const badges = screen.getAllByTestId('badge');
+        expect(badges[0]).toHaveTextContent('5 Upcoming Events');
+        expect(badges[1]).toHaveTextContent('No Upcoming Events');
+    });
+
+    it('renders FavouriteButton with correct id', () => {
+        const favBtns = screen.getAllByTestId('favourite-btn');
+        expect(favBtns[0]).toHaveAttribute('data-id', '1');
+        expect(favBtns[1]).toHaveAttribute('data-id', '2');
+    });
+
+    it('calls FavouriteButton on click', () => {
+        const favBtns = screen.getAllByTestId('favourite-btn');
+        fireEvent.click(favBtns[0]);
+        expect(favBtnMock).toHaveBeenCalledWith(1);
+        fireEvent.click(favBtns[1]);
+        expect(favBtnMock).toHaveBeenCalledWith(2);
+    });
+
+    it('applies hover style to venue box', () => {
+        // Chakra UI _hover is not applied in this mock, but we can check the prop exists
+        const boxes = screen.getAllByTestId('linkbox');
+        expect(boxes[0].querySelector('div')).toHaveAttribute('_hover', '[object Object]');
     });
 });

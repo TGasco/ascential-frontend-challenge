@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest'
@@ -67,9 +67,11 @@ describe('FavouriteButton', () => {
     // simulate external update
     const newFavs = { venues: { 5: true }, events: {} }
     localStorage.setItem('favourites', JSON.stringify(newFavs))
-    window.dispatchEvent(new Event('favouritesUpdated'))
+    await act(async () => {
+      window.dispatchEvent(new Event('favouritesUpdated'));
+    });
     // after event, button should update to solid
-    await screen.findByRole('button', { name: /add to favourites/i })
+    await screen.findByRole('button', { name: /add to favourites/i });
     expect(btn).toHaveAttribute("data-favourite", "true");
-  })
+  });
 })
